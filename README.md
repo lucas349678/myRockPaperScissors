@@ -1,1 +1,1 @@
-# odin-RockPaperScissors
+going to try and make a basic Rock-Paper-Scissors game in javascript using the console
