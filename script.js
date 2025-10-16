@@ -1,26 +1,28 @@
-    const Rock = "rock"
-    const Paper = "paper"
-    const Scissors = "scissors"
-// If the number is smaller or equal to 33 return Rock
-//  else if the number is between 33 and 66 return Paper
-// else if the number is higher then 66 let return Scissors
+const Rock = "rock"
+const Paper = "paper"
+const Scissors = "scissors"
+
+let humanScore = 0;
+let computerScore = 0;
+
+
+const roundResult = document.querySelector(".roundResult")
+const humanSelection = document.querySelector(".humanSelection")
+const computerSelection = document.querySelector(".computerSelection")
+const humanScoreSpan = document.querySelector(".humScore");
+const computerScoreSpan = document.querySelector(".comScore");
+const playAgainButton = document.querySelector("#playAgainButton");
+
 
 function getComputerChoice(){
-    let randomNumber = Math.floor(Math.random() * 100);
-
-    if (randomNumber <= 33){
-        return Rock;
-    } else if (randomNumber > 33 && randomNumber <= 66){
-        return Paper;
-    }else{
-        return Scissors;
-    }
+    const randomNumber = Math.floor(Math.random() * 3);
+    if (randomNumber === 0) return Rock;
+    if (randomNumber === 1) return Paper;
+    return Scissors;
 }
 
 
-function getHumanChoice(){
-    let humanInput = prompt("Rock, Paper or Scissors?")
-    humanInput = humanInput.trim().toLowerCase();
+function getHumanChoice(humanInput){
 
     if (humanInput === "rock"){
         return Rock;
@@ -31,56 +33,85 @@ function getHumanChoice(){
     }
 }
 
+    document.querySelector("#rock").addEventListener("click", function() {
+      const choice = getHumanChoice("rock");
+      console.log("You chose:", choice);
+    });
 
-var humanScore = 0;
-var computerScore = 0;
+    document.querySelector("#paper").addEventListener("click", function() {
+      const choice = getHumanChoice("paper");
+      console.log("You chose:", choice);
+    });
+
+    document.querySelector("#scissors").addEventListener("click", function() {
+      const choice = getHumanChoice("scissors");
+      console.log("You chose:", choice);
+    });
+
+
 
 function playRound(humanChoice, computerChoice){
     if (humanChoice === computerChoice){
-        return "It's a tie";
+        roundResult.textContent = "It's a tie";
     }else if (
         (humanChoice === "rock" && computerChoice === "scissors") ||
         (humanChoice === "paper" && computerChoice === "rock") ||
         (humanChoice === "scissors" && computerChoice === "paper")
         ){
             humanScore++;
-            return "You Win!";
+            roundResult.textContent = "You win this Round!";
         }else{
             computerScore++;
-            return "You Lose!";
+            roundResult.textContent = "You Lose this Round!"
         }
-}
+    humanSelection.textContent = `Your Selection: ${humanChoice}`
+    computerSelection.textContent = `Computer Selection: ${computerChoice}`
 
+    humanScoreSpan.textContent = humanScore;
+    computerScoreSpan.textContent = computerScore;
 
-function playGame() {
-
-    let playAgain = true;
-
-    while (playAgain) {
-        humanScore = 0;
-        computerScore = 0;
-
-        while (humanScore < 3 && computerScore < 3) {
-            const humanSelection = getHumanChoice();
-            const computerSelection = getComputerChoice();
-
-            const roundResult = playRound(humanSelection, computerSelection);
-
-            console.log("Human chose:", humanSelection);
-            console.log("Computer chose:", computerSelection);
-            console.log(roundResult);
-            console.log(`Score - Human: ${humanScore}, Computer: ${computerScore}`);
-            console.log("--------------------");
+    if(humanScore === 3 || computerScore === 3) {
+        if(humanScore === 3){
+            roundResult.textContent = "You've Won the Game"
+            roundResult.style.color = "green";
+        }
+        else{
+            roundResult.textContent = "You've Lost the Game"
+            roundResult.style.color = "red";
         }
 
-        if (humanScore === 3) {
-            console.log("You've won the Game! 🎉");
-        } else {
-            console.log("You've lost. Better luck next time!");
-        }
-
-        playAgain = confirm("Do you want to play again?");
+        buttons.forEach(button => button.disabled = true);
     }
 
-    console.log("Thanks for playing!");
 }
+
+function resetGame(){
+    humanScore = 0;
+    computerScore = 0;
+    humanScoreSpan.textContent = humanScore;
+    computerScoreSpan.textContent = computerScore;
+    roundResult.textContent = "Make your Choice";
+    humanSelection.textContent = "Your Selection:";
+    computerSelection.textContent = "Computer Selection:";
+    buttons.forEach(button => button.disabled = false);
+    roundResult.style.color = "blanchedalmond"
+}
+
+playAgainButton.addEventListener('click', resetGame);
+
+
+
+const buttons = document.querySelectorAll("div.buttons > button")
+
+buttons.forEach(button => {
+    button.addEventListener('click', () =>{
+        const humanChoice = button.id;
+        const computerChoice = getComputerChoice();
+        playRound(humanChoice, computerChoice);
+    })
+})
+
+
+
+
+
